@@ -298,13 +298,13 @@ pub(crate) fn scrub(cmd_name: String, result_data: String) -> String {
 #[cfg(test)]
 mod test {
     macro_rules! scrub_cmd {
-        ($($cmd:literal),*) => {
-            let v: Vec<&str> = vec![$( $cmd,)*];
+        [$cmd:literal| $($replacement:literal),*] => {
+            let v: Vec<&str> = vec![$cmd];
             dbg!(v);
         }
     }
     #[test]
     fn run_dm() {
-        scrub_cmd!("f", "b");
+        scrub_cmd!["f" | "b"];
     }
 }
