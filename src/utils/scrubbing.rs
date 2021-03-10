@@ -298,14 +298,21 @@ pub(crate) fn scrub(cmd_name: String, result_data: String) -> String {
 #[cfg(test)]
 mod test {
     macro_rules! build_cmd_replace_map {
-        [$($cmd:literal| $($replacement:literal),*);*] => {
+        [ $hm:ident, $($cmd:literal| $($replacement:literal),*);*] => {
             $(
                 dbg!($cmd);
+                $(
+                    $hm.insert(
+                        $cmd.to_string(),
+                        $replacement.to_string()
+                    );
+                )*
             )*;
         }
     }
     #[test]
     fn run_dm() {
-        build_cmd_replace_map!["f" | "b"; "a" | "q"];
+        let mut myhm = std::collections::HashMap::<String, String>::new();
+        build_cmd_replace_map![myhm, "f" | "b"; "a" | "q"];
     }
 }
