@@ -301,10 +301,12 @@ mod test {
         [ $hm:ident, $($cmd:literal| $($replacement:literal),*);*] => {
             $(
                 $(
-                    $hm.insert(
-                        $cmd.to_string(),
-                        $replacement.to_string()
-                    );
+                    if !$hm.contains_key($cmd) {
+                        $hm.insert(
+                            $cmd.to_string(),
+                            $replacement.to_string()
+                        );
+                    }
                 )*
             )*;
             dbg!($hm);
