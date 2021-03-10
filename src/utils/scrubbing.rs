@@ -300,7 +300,6 @@ mod test {
     macro_rules! build_cmd_replace_map {
         [ $hm:ident, $($cmd:literal| $($replacement:literal),*);*] => {
             $(
-                dbg!($cmd);
                 $(
                     $hm.insert(
                         $cmd.to_string(),
@@ -308,6 +307,7 @@ mod test {
                     );
                 )*
             )*;
+            dbg!($hm);
         }
     }
     #[test]
