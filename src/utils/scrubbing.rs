@@ -297,9 +297,8 @@ pub(crate) fn scrub(cmd_name: String, result_data: String) -> String {
 
 #[cfg(test)]
 mod test {
-    macro_rules! scrub_cmd {
+    macro_rules! build_cmd_replace_map {
         [$($cmd:literal| $($replacement:literal),*);*] => {
-            //let v: Vec<&str> = vec![$($cmd)*];
             $(
                 dbg!($cmd);
             )*;
@@ -307,6 +306,6 @@ mod test {
     }
     #[test]
     fn run_dm() {
-        scrub_cmd!["f" | "b"; "a" | "q"];
+        build_cmd_replace_map!["f" | "b"; "a" | "q"];
     }
 }
