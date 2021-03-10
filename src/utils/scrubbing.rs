@@ -304,8 +304,13 @@ mod test {
                     if !$hm.contains_key($cmd) {
                         $hm.insert(
                             $cmd.to_string(),
-                            $replacement.to_string()
+                            vec![$replacement.to_string()]
                         );
+                    } else {
+                        $hm
+                         .get_mut($cmd)
+                         .unwrap()
+                         .push($replacement.to_string());
                     }
                 )*
             )*;
@@ -314,7 +319,7 @@ mod test {
     }
     #[test]
     fn run_dm() {
-        let mut myhm = std::collections::HashMap::<String, String>::new();
-        build_cmd_replace_map![myhm, "f" | "b"; "a" | "q"];
+        let mut myhm = std::collections::HashMap::<String, Vec<String>>::new();
+        build_cmd_replace_map![myhm, "f" | "b", "c"; "a" | "q"];
     }
 }
