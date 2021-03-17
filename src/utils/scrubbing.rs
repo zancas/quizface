@@ -1,11 +1,6 @@
 use std::collections::HashMap;
 #[derive(Debug)]
 struct Replacements(HashMap<String, Vec<(String, String)>>);
-impl Replacements {
-    fn new() -> Self {
-        Replacements(HashMap::new())
-    }
-}
 use std::iter::FromIterator;
 
 impl FromIterator<(String, (String, String))> for Replacements {
