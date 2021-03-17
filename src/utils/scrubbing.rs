@@ -12,7 +12,7 @@ impl FromIterator<(String, (String, String))> for Replacements {
     fn from_iter<I: IntoIterator<Item = (String, (String, String))>>(
         iter: I,
     ) -> Self {
-        let mut r = Replacements::new();
+        let mut r = Replacements(HashMap::new());
         for i in iter {
             if !r.0.contains_key(&i.0) {
                 r.0.insert(i.0, vec![i.1]);
@@ -23,22 +23,6 @@ impl FromIterator<(String, (String, String))> for Replacements {
         r
     }
 }
-/*
-fn main() {
-    let r = Replacements::new();
-    /*let s = vec![
-        ("a".to_string(), ("b".to_string(), "c".to_string())),
-        ("a".to_string(), ("q".to_string(), "z".to_string())),
-    ];*/
-    let y = vec![("a", ("b", "c")), ("a", ("q", "z"))];
-    let s: Vec<(String, (String, String))> = y
-        .iter()
-        .map(|(x, y)| (x.to_string(), (y.0.to_string(), y.1.to_string())))
-        .collect();
-    let r2: Replacements = s.into_iter().collect();
-    dbg!(r2);
-}
-*/
 fn create_replacement_map() -> Replacements {
     vec![("getaddressdeltas", (r#"a"#, r#"b"#))]
         .iter()
@@ -370,6 +354,7 @@ macro_rules! dotdotdot {
 }
 
 pub(crate) fn scrub(cmd_name: String, result_data: String) -> String {
+    create_replacement_map();
     let result_data = result_data
         .replace(r#", ..."#, r#""#)
         .replace(r#",..."#, r#""#);
