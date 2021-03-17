@@ -1,3 +1,52 @@
+use std::collections::HashMap;
+#[derive(Debug)]
+struct Replacements(HashMap<String, Vec<(String, String)>>);
+impl Replacements {
+    fn new() -> Self {
+        Replacements(HashMap::new())
+    }
+}
+use std::iter::FromIterator;
+
+impl FromIterator<(String, (String, String))> for Replacements {
+    fn from_iter<I: IntoIterator<Item = (String, (String, String))>>(
+        iter: I,
+    ) -> Self {
+        let mut r = Replacements::new();
+        for i in iter {
+            if !r.0.contains_key(&i.0) {
+                r.0.insert(i.0, vec![i.1]);
+            } else {
+                r.0.get_mut(&i.0).unwrap().append(&mut vec![i.1.clone()]);
+            }
+        }
+        r
+    }
+}
+/*
+fn main() {
+    let r = Replacements::new();
+    /*let s = vec![
+        ("a".to_string(), ("b".to_string(), "c".to_string())),
+        ("a".to_string(), ("q".to_string(), "z".to_string())),
+    ];*/
+    let y = vec![("a", ("b", "c")), ("a", ("q", "z"))];
+    let s: Vec<(String, (String, String))> = y
+        .iter()
+        .map(|(x, y)| (x.to_string(), (y.0.to_string(), y.1.to_string())))
+        .collect();
+    let r2: Replacements = s.into_iter().collect();
+    dbg!(r2);
+}
+*/
+fn create_replacement_map() -> Replacements {
+    vec![("getaddressdeltas", (r#"a"#, r#"b"#))]
+        .iter()
+        .map(|(x, y)| (x.to_string(), (y.0.to_string(), y.1.to_string())))
+        .collect::<Vec<(String, (String, String))>>()
+        .into_iter()
+        .collect::<Replacements>()
+}
 macro_rules! getaddressdeltas {
     ($result_data:expr) => {
         $result_data
@@ -321,6 +370,9 @@ macro_rules! dotdotdot {
 }
 
 pub(crate) fn scrub(cmd_name: String, result_data: String) -> String {
+    let result_data = result_data
+        .replace(r#", ..."#, r#""#)
+        .replace(r#",..."#, r#""#);
     if cmd_name == "getaddressdeltas".to_string() {
         getaddressdeltas!(result_data)
     } else if cmd_name == "getblockheader".to_string() {
@@ -368,6 +420,6 @@ pub(crate) fn scrub(cmd_name: String, result_data: String) -> String {
     } else if cmd_name == "getblocktemplate".to_string() {
         getblocktemplate!(result_data)
     } else {
-        dotdotdot!(result_data)
+        result_data
     }
 }
