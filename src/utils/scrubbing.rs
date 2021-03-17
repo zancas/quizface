@@ -18,6 +18,9 @@ impl FromIterator<(String, (String, String))> for Replacements {
         r
     }
 }
+macro_rules! build_crm_input {
+    ($($cmd:literal | $($replacements:literal)).*) => {};
+}
 fn create_replacement_map() -> Replacements {
     vec![("getaddressdeltas", (r#"a"#, r#"b"#))]
         .iter()
@@ -26,6 +29,7 @@ fn create_replacement_map() -> Replacements {
         .into_iter()
         .collect::<Replacements>()
 }
+
 macro_rules! getaddressdeltas {
     ($result_data:expr) => {
         $result_data
