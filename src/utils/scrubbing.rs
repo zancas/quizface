@@ -18,9 +18,22 @@ impl FromIterator<(String, (String, String))> for Replacements {
         r
     }
 }
-macro_rules! build_crm_input {
-    ($($cmd:literal | $($replacements:literal)).*) => {};
+/*
+fn main() {
+    let r = Replacements::new();
+    /*let s = vec![
+        ("a".to_string(), ("b".to_string(), "c".to_string())),
+        ("a".to_string(), ("q".to_string(), "z".to_string())),
+    ];*/
+    let y = vec![("a", ("b", "c")), ("a", ("q", "z"))];
+    let s: Vec<(String, (String, String))> = y
+        .iter()
+        .map(|(x, y)| (x.to_string(), (y.0.to_string(), y.1.to_string())))
+        .collect();
+    let r2: Replacements = s.into_iter().collect();
+    dbg!(r2);
 }
+*/
 fn create_replacement_map() -> Replacements {
     vec![("getaddressdeltas", (r#"a"#, r#"b"#))]
         .iter()
@@ -29,7 +42,6 @@ fn create_replacement_map() -> Replacements {
         .into_iter()
         .collect::<Replacements>()
 }
-
 macro_rules! getaddressdeltas {
     ($result_data:expr) => {
         $result_data
@@ -354,9 +366,6 @@ macro_rules! dotdotdot {
 
 pub(crate) fn scrub(cmd_name: String, result_data: String) -> String {
     create_replacement_map();
-    let result_data = result_data
-        .replace(r#", ..."#, r#""#)
-        .replace(r#",..."#, r#""#);
     if cmd_name == "getaddressdeltas".to_string() {
         getaddressdeltas!(result_data)
     } else if cmd_name == "getblockheader".to_string() {
@@ -404,6 +413,6 @@ pub(crate) fn scrub(cmd_name: String, result_data: String) -> String {
     } else if cmd_name == "getblocktemplate".to_string() {
         getblocktemplate!(result_data)
     } else {
-        result_data
+        dotdotdot!(result_data)
     }
 }
